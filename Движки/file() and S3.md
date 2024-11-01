@@ -1,12 +1,12 @@
 # Теория
 Начнем с **file()** - управляет данными в одном файле на диске в указанном формате. Это значит что он не хранит файл у себя, а каждый раз ходит в файловую систему чтобы прочитать. Данный движок полезен когда нужно сохранить какую то конфиденциальную информацию на диске и время от времени к ней обращаться. Не всегда для данного движка требуется создавать отдельную таблицу через CREATE TABLE , иногда можно просто обратиться через обычную функцию например вот так 
-``
+``sql
 SELECT * 
 FROM file('test.csv', 'CSV', '...схема данных...')
 ``
 Теперь применим функцию для чтения такого файла:
 
-``
+``sql
 SELECT * 
 FROM file('titanic.csv', 'CSV', 'PassengerId Int64, Survived Int8, Pclass Int16, Name String, Sex String, Age String, SibSp  Int8, Parch Int32, Ticket String, Fare String, Cabin  String, Embarked  String')
 ``
@@ -23,7 +23,8 @@ FROM file('titanic.csv', 'CSV', 'PassengerId Int64, Survived Int8, Pclass Int16,
 
 Пример использования:
 
-``CREATE TABLE s3_table (
+``sql
+CREATE TABLE s3_table (
    name String, 
    value UInt32
 ) 

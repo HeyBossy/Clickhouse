@@ -26,7 +26,7 @@ GROUP BY user_id;
 ```
 
 Теперь давайте создадим MV таблицы которые будут как бы смотреть в sales
-```
+```sql
 CREATE MATERIALIZED VIEW sales1
 ENGINE = MergeTree() 
          PARTITION BY toYYYYMM(sale_date) 
@@ -36,17 +36,20 @@ FROM sales
 ```
 Как можете заметить синтаксис весьма прост, разберем его чуть подробнее. Первым делом прописываем название нашей MV
 
-```CREATE MATERIALIZED VIEW sales1```
+```sql
+CREATE MATERIALIZED VIEW sales1
+```
 Затем прописываем движок, сортировку и партиционирование, как у обычных таблиц. В нашем примере мы поменяли ключ сортировки!
 
-```
+```sql
 ENGINE = MergeTree() 
          PARTITION BY toYYYYMM(sale_date) 
          ORDER BY (sale_date)
  ```
 Затем выполняем запрос на чтение к вставляемым данным. Именно так, этот запрос будет использован только к тем данным которые прям сейчас мы пытаемся вставить. В данном случае мы просто читаем их как есть.
 
-```AS SELECT *
+```sql
+AS SELECT *
 FROM sales
 ```
 **Когда я рекомендую использовать данную таблицу, и что я делать не рекомендую:**
@@ -68,18 +71,27 @@ FROM sales
 
 Код создающий NULL таблицу:
 
-```CREATE TABLE raw (json String) ENGINE = Null;```
+```sql
+CREATE TABLE raw (json String) ENGINE = Null;
+```
 
 После того как вы напишите запрос, вставьте данные в таблицу raw в качестве ответа я жду от вас код MV а также скриншот что вставленные данные разбились по колонкам. Партиционирование и сортировку можете выбрать на свое усмотрение.
 
-```INSERT INTO raw (json) FORMAT JSONAsString {"id":1,"name":"agqjGPFWQL","value":0.4147567279516813,"is_active":true,"key":"590","list":[10,24,35,14,12]},{"id":2,"name":"jquAteQEnl","value":0.8693090338928422,"is_active":true,"key":"422","list":[33,68,50,82,42]},{"id":3,"name":"lLnNYOndXF","value":0.81953610746394,"is_active":true,"key":"202","list":[60,48,29,38,0]},{"id":4,"name":"jIxTqCPoQM","value":0.3049173457433211,"is_active":true,"key":"319","list":[62,75,26,19,77]},{"id":5,"name":"lfRfKKJuzL","value":0.6913571966267789,"is_active":true,"key":"551","list":[79,78,56,85,60]},{"id":6,"name":"qpnEHsTOsk","value":0.01984812089081356,"is_active":false,"key":"864","list":[16,90,92,3,5]},{"id":7,"name":"IGjyyDKIKX","value":0.5269701687049049,"is_active":false,"key":"410","list":[80,39,49,90,94]},....```
+```sql
+INSERT INTO raw (json) FORMAT JSONAsString {"id":1,"name":"agqjGPFWQL","value":0.4147567279516813,"is_active":true,"key":"590","list":[10,24,35,14,12]},{"id":2,"name":"jquAteQEnl","value":0.8693090338928422,"is_active":true,"key":"422","list":[33,68,50,82,42]},{"id":3,"name":"lLnNYOndXF","value":0.81953610746394,"is_active":true,"key":"202","list":[60,48,29,38,0]},{"id":4,"name":"jIxTqCPoQM","value":0.3049173457433211,"is_active":true,"key":"319","list":[62,75,26,19,77]},{"id":5,"name":"lfRfKKJuzL","value":0.6913571966267789,"is_active":true,"key":"551","list":[79,78,56,85,60]},{"id":6,"name":"qpnEHsTOsk","value":0.01984812089081356,"is_active":false,"key":"864","list":[16,90,92,3,5]},{"id":7,"name":"IGjyyDKIKX","value":0.5269701687049049,"is_active":false,"key":"410","list":[80,39,49,90,94]},....
+```
+
 
 Формат вставляемых данных
 
-```{"id":1,"name":"agqjGPFWQL","value":0.4147567279516813,"is_active":true,"key":"590","list":[10,24,35,14,12]}```
-В качестве ответа введите sum(is_active) 
-# Решение
+```sql
+{"id":1,"name":"agqjGPFWQL","value":0.4147567279516813,"is_active":true,"key":"590","list":[10,24,35,14,12]}
 ```
+
+В качестве ответа введите sum(is_active) 
+
+# Решение
+```sql
 -- таблица  принимает JSONы
 CREATE TABLE raw (json String) ENGINE = Null
 

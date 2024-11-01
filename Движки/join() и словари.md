@@ -40,7 +40,7 @@ dictGet('dict_name', attr_names, id_expr)
 ```joinGet(join_storage_table_name, `value_column`, join_keys)```
 
 Давайте попробуем проверить это на практике. Создадим таблицу:
-```
+```sql
 CREATE TABLE join_table(
    id UInt32, 
    val String
@@ -50,7 +50,7 @@ SETTINGS join_use_nulls=1
 ```
 
 Интерес для нас здесь представляет только строка
-```
+```sql
 ENGINE = Join(ANY, LEFT, id);
 ```
 
@@ -58,10 +58,12 @@ ENGINE = Join(ANY, LEFT, id);
 
 Вставим данные
 
-```INSERT INTO join_table VALUES (1,'a')(2,'b')(3,'c');```
+```sql
+INSERT INTO join_table VALUES (1,'a')(2,'b')(3,'c');
+```
 
 Теперь создадим таблицу с которой будет происходить JOIN
-```
+```sql
 CREATE TABLE table1(
    id1 UInt32, 
    val1 String
@@ -74,7 +76,7 @@ ENGINE = Log;
 
 Теперь напишем запрос на объединение данных:
 
-```
+```sql
 SELECT id1, joinGet('join_table', 'val', id1)
 FROM table1
 ```
@@ -84,7 +86,7 @@ FROM table1
  данном задании вам нужно будет воспользоваться готовым кодом и просто объединить 2 таблицы по ключу. Как бонус вы получите большой словарь с данными по странам который я когда то давно собирал для своих проектов.
 
 Таблица JOIN
-```
+```sql
 CREATE TABLE geo 
 ( 
     country_code String, 
@@ -112,7 +114,7 @@ ENGINE = Join(ANY, LEFT, country_code);
 
 Теперь создадим вторую таблицу к которой будем джойнить.
 
-```
+```sql
 CREATE TABLE log
 ( 
     event_time DateTime, 
@@ -127,7 +129,7 @@ ENGINE = Log
 Напишите запрос которые объединит данные с помощью ```joinGet``` и выведет размер популяции для каждой строки, в качестве ответа вставьте сумму по получившемуся столбцу.
 
 # Решение
-```
+```sql
 SELECT 
     SUM(joinGet('default.geo', 'population', log.country_code)) AS total_population
 FROM 

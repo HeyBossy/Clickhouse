@@ -47,14 +47,14 @@ ORDER BY (product_category)
 - ``ORDER BY``: product_category
 
 После чего сгенерируйте данные и вставьте в таблицу, код для генерации данных. Вставка данных аналогично предыдущей задаче:
-```
+```sql
 INSERT INTO <your_table_name>
 FORMAT JSONEachRow
 [{json_data}]
 ```
 В качестве ответа укажите max(sale_amount) в полученной таблице и умножьте это на количество строк в таблице.
 # Решение
-```SQL
+```sql
 CREATE TABLE sales_data
 (
     sale_date Date,
